@@ -6,6 +6,7 @@
 package cardealer;
 
 import admin.adminDashBoard;
+import user.userDashBoard;
 import config.dbConnector;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,15 +25,36 @@ public class dashBoard extends javax.swing.JFrame {
         initComponents();
     }
 
-public static boolean loginAcc(String username, String password){
-    dbConnector connector = new dbConnector();
-    try{
-        String query = "SELECT * FROM tbl_user WHERE u_username = '" + username + "' AND u_password = '" + password + "'";
-        ResultSet resultSet = connector.getData(query);
-        return resultSet.next();
+public boolean loginAcc(String username, String password) {
+    dbConnector dbc = new dbConnector();
+    try {
+        ResultSet rs = dbc.getData("SELECT * FROM tbl_user WHERE u_username='" + username + "' AND u_password='" + password + "' AND u_status='Active'");
+
+        if (rs.next()) { // Found an active user
+            return true;
+        }
+
     } catch (SQLException ex) {
-        return false;
+        JOptionPane.showMessageDialog(null, "Database Error: " + ex.getMessage());
     }
+
+    return false; // No active user found
+}
+
+public String getUserType(String username) {
+    dbConnector dbc = new dbConnector();
+    try {
+        ResultSet rs = dbc.getData("SELECT u_type FROM tbl_user WHERE u_username='" + username + "' AND u_status='Active'");
+
+        if (rs.next()) { 
+            return rs.getString("u_type"); // Returns "Admin" or "User"
+        }
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "Database Error: " + ex.getMessage());
+    }
+
+    return null; // No valid user type found
 }
     
     /**
@@ -53,15 +75,10 @@ public static boolean loginAcc(String username, String password){
         jLabel1 = new javax.swing.JLabel();
         passbg = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        emailbg = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        numberbg = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        cnum = new javax.swing.JTextField();
+        lgbt = new javax.swing.JButton();
         pass = new javax.swing.JPasswordField();
         user = new javax.swing.JTextField();
-        email = new javax.swing.JTextField();
+        redbt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -112,22 +129,24 @@ public static boolean loginAcc(String username, String password){
                 .addContainerGap())
         );
 
+        jLabel1.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         jLabel1.setText("Name");
         unamebg.add(jLabel1);
 
+        jLabel2.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         jLabel2.setText("Password");
         passbg.add(jLabel2);
 
-        jLabel3.setText("Email");
-        emailbg.add(jLabel3);
-
-        jLabel4.setText("Contact Number");
-        numberbg.add(jLabel4);
-
-        jButton1.setText("Login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        lgbt.setText("Login");
+        lgbt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                lgbtActionPerformed(evt);
+            }
+        });
+
+        pass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passActionPerformed(evt);
             }
         });
 
@@ -137,66 +156,56 @@ public static boolean loginAcc(String username, String password){
             }
         });
 
+        redbt.setText("Register Now");
+        redbt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redbtActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout loginLayout = new javax.swing.GroupLayout(login);
         login.setLayout(loginLayout);
         loginLayout.setHorizontalGroup(
             loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loginLayout.createSequentialGroup()
                 .addComponent(sidepanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61)
                 .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(loginLayout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(emailbg, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(loginLayout.createSequentialGroup()
-                                .addComponent(numberbg, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cnum, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(loginLayout.createSequentialGroup()
-                                    .addComponent(passbg, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(pass))
-                                .addGroup(loginLayout.createSequentialGroup()
-                                    .addComponent(unamebg, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(263, 263, 263))
-                                .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(loginLayout.createSequentialGroup()
-                                .addGap(118, 118, 118)
-                                .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 51, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(232, 232, 232))))
+                        .addComponent(unamebg, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(loginLayout.createSequentialGroup()
+                            .addGap(135, 135, 135)
+                            .addComponent(lgbt, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(redbt, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, loginLayout.createSequentialGroup()
+                            .addComponent(passbg, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 51, Short.MAX_VALUE))
         );
         loginLayout.setVerticalGroup(
             loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(sidepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(loginLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(loginLayout.createSequentialGroup()
-                        .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(loginLayout.createSequentialGroup()
-                                .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(unamebg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(passbg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(emailbg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(user)
+                    .addComponent(unamebg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(29, 29, 29)
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(passbg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pass))
                 .addGap(18, 18, 18)
-                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(numberbg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cnum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
-                .addComponent(jButton1)
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lgbt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(redbt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -219,16 +228,43 @@ public static boolean loginAcc(String username, String password){
         // TODO add your handling code here:
     }//GEN-LAST:event_userActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(loginAcc(user.getText(), pass.getText())){
-            JOptionPane.showMessageDialog(null, "Login Success!");
+    private void lgbtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lgbtActionPerformed
+        String username = user.getText();
+    String password = pass.getText();
+
+    if (loginAcc(username, password)) { 
+        String userType = getUserType(username); // Get the user's type
+
+        if (userType == null) { 
+            JOptionPane.showMessageDialog(null, "Login Failed!");
+            return;
+        }
+
+        JOptionPane.showMessageDialog(null, "Login Success!");
+
+        if (userType.equals("Admin")) {
             adminDashBoard ads = new adminDashBoard();
             ads.setVisible(true);
-            this.dispose();
-        }else{
-            JOptionPane.showMessageDialog(null, "Login Failed!");
+        } else {
+            userDashBoard udb = new userDashBoard();
+            udb.setVisible(true);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+
+        this.dispose();
+    } else {
+        JOptionPane.showMessageDialog(null, "Login Failed!");
+    }
+    }//GEN-LAST:event_lgbtActionPerformed
+
+    private void passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passActionPerformed
+
+    private void redbtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redbtActionPerformed
+        regform rgf = new regform();
+        rgf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_redbtActionPerformed
 
     /**
      * @param args the command line arguments
@@ -266,19 +302,14 @@ public static boolean loginAcc(String username, String password){
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField cnum;
-    private javax.swing.JTextField email;
-    private javax.swing.JPanel emailbg;
     private javax.swing.JPanel header;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton lgbt;
     private javax.swing.JPanel login;
-    private javax.swing.JPanel numberbg;
     private javax.swing.JPasswordField pass;
     private javax.swing.JPanel passbg;
+    private javax.swing.JButton redbt;
     private javax.swing.JLabel sidebar_pic;
     private javax.swing.JPanel sidepanel;
     private javax.swing.JLabel title;
