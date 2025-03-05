@@ -30,6 +30,7 @@ public class adminDashBoard extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         title1 = new javax.swing.JLabel();
         title2 = new javax.swing.JLabel();
+        ufbt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -41,7 +42,15 @@ public class adminDashBoard extends javax.swing.JFrame {
 
         title2.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
         title2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title2.setText("Welocme Admin!");
+        title2.setText("Welcome Admin!");
+
+        ufbt.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
+        ufbt.setText("Press Here to User Data");
+        ufbt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ufbtActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -51,6 +60,10 @@ public class adminDashBoard extends javax.swing.JFrame {
                 .addGap(264, 264, 264)
                 .addComponent(title1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(265, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(ufbt, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(190, 190, 190))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(93, 93, 93)
@@ -62,7 +75,9 @@ public class adminDashBoard extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(87, 87, 87)
                 .addComponent(title1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(278, Short.MAX_VALUE))
+                .addGap(56, 56, 56)
+                .addComponent(ufbt, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(148, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(10, 10, 10)
@@ -83,6 +98,12 @@ public class adminDashBoard extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ufbtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ufbtActionPerformed
+        userForms ufs = new userForms();
+        ufs.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_ufbtActionPerformed
 
     /**
      * @param args the command line arguments
@@ -123,5 +144,6 @@ public class adminDashBoard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel title1;
     private javax.swing.JLabel title2;
+    private javax.swing.JButton ufbt;
     // End of variables declaration//GEN-END:variables
 }
