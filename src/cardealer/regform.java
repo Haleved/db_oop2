@@ -204,6 +204,11 @@ public class regform extends javax.swing.JFrame {
         ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "User" }));
 
         bacK.setText("Cancel");
+        bacK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bacKActionPerformed(evt);
+            }
+        });
 
         fronT.setText("Register");
         fronT.addActionListener(new java.awt.event.ActionListener() {
@@ -396,6 +401,12 @@ public class regform extends javax.swing.JFrame {
     private void cnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cnActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cnActionPerformed
+
+    private void bacKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bacKActionPerformed
+        dashBoard db = new dashBoard();
+        db.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_bacKActionPerformed
 
     /**
      * @param args the command line arguments
