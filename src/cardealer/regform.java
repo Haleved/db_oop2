@@ -350,17 +350,14 @@ public class regform extends javax.swing.JFrame {
     String username = un.getText().trim();
     String contact = cn.getText().trim(); 
     
-
     if (fname.isEmpty() || lname.isEmpty() || email.isEmpty() || password.isEmpty() || username.isEmpty() || contact.isEmpty()) {
         JOptionPane.showMessageDialog(null, "All fields are required!");
         return;
     }
-
     if (password.length() < 8) {
         JOptionPane.showMessageDialog(null, "Password must be at least 8 characters!");
         return;
     }
-    
     if (!contact.matches("\\d+")) { 
         JOptionPane.showMessageDialog(null, "Contact number must be numeric!");
         return;
@@ -370,13 +367,14 @@ public class regform extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Username or Email already exists!");
         return;
     }
-
 } catch (Exception ex) {
     JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
 }
     
         int result = dbc.insertData("INSERT INTO tbl_user (u_fname, u_lname, u_email, u_password, u_username, u_cnum, u_type, u_status) VALUES ('" +
-                      fn.getText()+ "', '" +ln.getText()+ "', '" +em.getText()+ "', '" + ps.getText()+ "', '" +un.getText()+ "', '" +cn.getText()+ "', '" + ut.getSelectedItem() + "', 'Pending')");
+                      fn.getText()+ "', '" +ln.getText()+ "', '" +em.getText()+ "', "
+                              + "'" + ps.getText()+ "', '" +un.getText()+ "', '" +cn.getText()+ "',"
+                                      + " '" + ut.getSelectedItem() + "', 'Pending')");
         
         
         if (result == 1) {

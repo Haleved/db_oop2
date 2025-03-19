@@ -6,6 +6,7 @@
 package cardealer;
 
 import admin.adminDashBoard;
+import config.Session;
 import user.userDashBoard;
 import config.dbConnector;
 import java.sql.ResultSet;
@@ -31,6 +32,26 @@ public boolean loginAcc(String username, String password) {
         ResultSet rs = dbc.getData("SELECT * FROM tbl_user WHERE u_username='" + username + "' AND u_password='" + password + "' AND u_status='Active'");
 
         if (rs.next()) { // Found an active user
+        Session sess = Session.getInstance();
+            sess.setUid(rs.getInt("u_id"));
+            sess.setFname(rs.getString("u_fname"));
+            sess.setLname(rs.getString("u_lname"));
+            sess.setEmail(rs.getString("u_email"));
+            sess.setUsername(rs.getString("u_username"));
+            sess.setType(rs.getString("u_type"));
+            sess.setStatus(rs.getString("u_status"));
+      
+            // Redirect based on user type
+            if (rs.getString("u_type").equals("Admin")) {
+               adminDashBoard adb = new adminDashBoard();
+               adb.setVisible(true);
+               this.dispose();
+            } else {
+               userDashBoard udb = new userDashBoard();
+               udb.setVisible(true);
+               this.dispose();
+            }
+
             return true;
         }
 
@@ -228,7 +249,7 @@ public String getUserType(String username) {
     }//GEN-LAST:event_userActionPerformed
 
     private void lgbtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lgbtActionPerformed
-        String username = user.getText();
+    String username = user.getText();
     String password = pass.getText();
 
     if (loginAcc(username, password)) { 
@@ -238,16 +259,8 @@ public String getUserType(String username) {
             JOptionPane.showMessageDialog(null, "Login Failed!");
             return;
         }
-
+        
         JOptionPane.showMessageDialog(null, "Login Success!");
-
-        if (userType.equals("Admin")) {
-            adminDashBoard ads = new adminDashBoard();
-            ads.setVisible(true);
-        } else {
-            userDashBoard udb = new userDashBoard();
-            udb.setVisible(true);
-        }
 
         this.dispose();
     } else {
