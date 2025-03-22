@@ -6,7 +6,9 @@
 package admin;
 
 import cardealer.*;
+import config.PassHashher;
 import config.dbConnector;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -489,9 +491,10 @@ public class adminregform extends javax.swing.JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
-
+        try{
+    String pass = PassHashher.hashPassword(ps.getText());
         int result = dbc.insertData("INSERT INTO tbl_user (u_fname, u_lname, u_email, u_password, u_username, u_cnum, u_type, u_status) VALUES ('" +
-            uid.getText()+ "', '" +ln.getText()+ "', '" +em.getText()+ "', '" + ps.getText()+ "', '" +un.getText()+ "', '" +cn.getText()+ "', '" + ut.getSelectedItem() + "','" + us.getSelectedItem() + "')");
+            uid.getText()+ "', '" +ln.getText()+ "', '" +em.getText()+ "', '" + pass+ "', '" +un.getText()+ "', '" +cn.getText()+ "', '" + ut.getSelectedItem() + "','" + us.getSelectedItem() + "')");
 
         if (result == 1) {
             JOptionPane.showMessageDialog(null, "Registration Successful!");
@@ -502,6 +505,9 @@ public class adminregform extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Registration Failed!");
         }
+        }catch(NoSuchAlgorithmException ex){
+        System.out.println(""+ex);
+    }
     }//GEN-LAST:event_addUActionPerformed
 
     private void fnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fnActionPerformed

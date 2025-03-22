@@ -6,9 +6,11 @@
 package cardealer;
 
 import admin.adminDashBoard;
+import config.PassHashher;
 import config.Session;
 import user.userDashBoard;
 import config.dbConnector;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -29,10 +31,17 @@ public class dashBoard extends javax.swing.JFrame {
 public boolean loginAcc(String username, String password) {
     dbConnector dbc = new dbConnector();
     try {
-        ResultSet rs = dbc.getData("SELECT * FROM tbl_user WHERE u_username='" + username + "' AND u_password='" + password + "' AND u_status='Active'");
+        ResultSet rs = dbc.getData("SELECT * FROM tbl_user WHERE u_username='" + username + "' AND u_status='Active'");
 
-        if (rs.next()) { // Found an active user
-        Session sess = Session.getInstance();
+        if (rs.next()) {
+            
+        String hashedPass = rs.getString("u_password");
+        String rehashedPass = PassHashher.hashPassword(password);
+        
+            System.out.println(""+hashedPass);
+            System.out.println(""+rehashedPass);
+        if(hashedPass.equals(rehashedPass)){
+            Session sess = Session.getInstance();
             sess.setUid(rs.getInt("u_id"));
             sess.setFname(rs.getString("u_fname"));
             sess.setLname(rs.getString("u_lname"));
@@ -40,26 +49,24 @@ public boolean loginAcc(String username, String password) {
             sess.setUsername(rs.getString("u_username"));
             sess.setType(rs.getString("u_type"));
             sess.setStatus(rs.getString("u_status"));
-      
-            // Redirect based on user type
+            
             if (rs.getString("u_type").equals("Admin")) {
                adminDashBoard adb = new adminDashBoard();
                adb.setVisible(true);
                this.dispose();
-            } else {
+            } else{
                userDashBoard udb = new userDashBoard();
                udb.setVisible(true);
                this.dispose();
             }
-
-            return true;
+        return true;
         }
-
-    } catch (SQLException ex) {
+            }
+        
+    } catch (SQLException | NoSuchAlgorithmException ex) {
         JOptionPane.showMessageDialog(null, "Database Error: " + ex.getMessage());
     }
-
-    return false; // No active user found
+    return false;
 }
 
 public String getUserType(String username) {

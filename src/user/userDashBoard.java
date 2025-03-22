@@ -7,6 +7,9 @@ package user;
 
 import cardealer.dashBoard;
 import config.Session;
+import config.dbConnector;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -36,6 +39,7 @@ public class userDashBoard extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         title1 = new javax.swing.JLabel();
         lgout = new javax.swing.JButton();
+        acctdt = new javax.swing.JButton();
         acc_lname = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -67,6 +71,15 @@ public class userDashBoard extends javax.swing.JFrame {
             }
         });
         jPanel3.add(lgout, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 370, 90, 40));
+
+        acctdt.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
+        acctdt.setText("Account Details");
+        acctdt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acctdtActionPerformed(evt);
+            }
+        });
+        jPanel3.add(acctdt, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 140, 40));
 
         acc_lname.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
         acc_lname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -129,6 +142,30 @@ public class userDashBoard extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_formWindowActivated
 
+    private void acctdtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acctdtActionPerformed
+       try {
+        dbConnector dbc = new dbConnector();
+        Session sess = Session.getInstance(); 
+        
+        ResultSet rs = dbc.getData("SELECT * FROM tbl_user WHERE u_id = '" + sess.getUid() + "'");
+
+        if (rs.next()) {
+            userregform urf = new userregform();
+            urf.uid.setText(String.valueOf(rs.getInt("u_id")));
+            urf.fn.setText(rs.getString("u_fname"));
+            urf.ln.setText(rs.getString("u_lname"));
+            urf.em.setText(rs.getString("u_email"));
+            urf.ps.setText(rs.getString("u_password"));
+            urf.un.setText(rs.getString("u_username"));
+            urf.cn.setText(rs.getString("u_cnum"));
+            urf.setVisible(true);
+            this.dispose(); 
+        }
+    } catch (SQLException ex) {
+        System.out.println("Database Error: " + ex.getMessage());
+    }
+    }//GEN-LAST:event_acctdtActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -167,6 +204,7 @@ public class userDashBoard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel acc_lname;
     private javax.swing.JLabel acc_name;
+    private javax.swing.JButton acctdt;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton lgout;
